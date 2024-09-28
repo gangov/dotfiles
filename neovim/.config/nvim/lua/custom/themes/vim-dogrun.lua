@@ -1,0 +1,3 @@
+return {
+  'wadackel/vim-dogrun',
+}
