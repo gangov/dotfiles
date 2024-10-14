@@ -91,7 +91,8 @@
             "gnome-disks": "󰋊",
             "slack": "",
             "org.telegram.desktop": "",
-            "steam": ""
+            "steam": "",
+            "rofi": ""
         }
     },
     "mpd": {
