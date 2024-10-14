@@ -564,8 +564,7 @@ require('lazy').setup({
           -- Some languages (like typescript) have entire language plugins that can be useful:
           --    https://github.com/pmizio/typescript-tools.nvim
           --
-          -- But for many setups, the LSP (`tsserver`) will work just fine
-          -- tsserver = {},
+          -- ts_ls = {},
           --
 
           lua_ls = {
@@ -766,7 +765,7 @@ require('lazy').setup({
       local lspconfig = require 'lspconfig'
 
       -- Example configuration for other language servers
-      lspconfig.tsserver.setup {
+      lspconfig.ts_ls.setup {
         on_attach = function(client, bufnr)
           -- Enable completion
           require('cmp').setup.buffer { sources = { { name = 'nvim_lsp' } } }
