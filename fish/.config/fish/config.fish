@@ -1,16 +1,10 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
-
-# Start SSH agent and add key if not already done
-if not set -q SSH_AUTH_SOCK
-    eval (gnome-keyring-daemon --start --components=ssh) > /dev/null
-    set -x SSH_AUTH_SOCK $SSH_AUTH_SOCK
-    ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
-end
-
 set -U fish_key_bindings fish_default_key_bindings
 set -Ux EDITOR nvim
+
+# ssh-agent
+if status is-interactive
+    eval (keychain --eval --quiet id_ed25519)
+end
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 set -x PATH $PATH $HOME/.rvm/bin
