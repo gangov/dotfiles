@@ -4,7 +4,8 @@ end
 
 # Start SSH agent and add key if not already done
 if not set -q SSH_AUTH_SOCK
-    eval (ssh-agent -c) > /dev/null
+    eval (gnome-keyring-daemon --start --components=ssh) > /dev/null
+    set -x SSH_AUTH_SOCK $SSH_AUTH_SOCK
     ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
 end
 
