@@ -13,6 +13,9 @@ vim.o.termguicolors = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Conceal settings
+vim.opt.conceallevel = 2
+
 -- [[ Setting options ]]
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
