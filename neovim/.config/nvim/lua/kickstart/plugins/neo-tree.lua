@@ -17,12 +17,14 @@ return {
       position = 'right', -- Ensure NeoTree always opens on the right
       mappings = {
         ['<cr>'] = 'open_with_window_picker',
-        -- Add custom keybinding for live_grep in the selected folder
-        ['g'] = function(state)
-          local node = state.tree:get_node()
-          local path = node:get_id()
-          require('telescope.builtin').live_grep { cwd = path }
-        end,
+        -- Use <C-g> for live_grep in the selected folder
+        ['<C-g>'] = {
+          function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            require('telescope.builtin').live_grep { cwd = path }
+          end,
+        },
       },
     },
     filesystem = {
