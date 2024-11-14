@@ -4,7 +4,7 @@ return {
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+    'nvim-tree/nvim-web-devicons',
     'MunifTanjim/nui.nvim',
   },
   cmd = 'Neotree',
@@ -12,11 +12,17 @@ return {
     { '\\t', ':Neotree toggle<CR>', desc = 'NeoTree reveal' },
   },
   opts = {
-    close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+    close_if_last_window = true,
     window = {
-      position = 'right',
+      position = 'right', -- Ensure NeoTree always opens on the right
       mappings = {
         ['<cr>'] = 'open_with_window_picker',
+        -- Add custom keybinding for live_grep in the selected folder
+        ['g'] = function(state)
+          local node = state.tree:get_node()
+          local path = node:get_id()
+          require('telescope.builtin').live_grep { cwd = path }
+        end,
       },
     },
     filesystem = {
@@ -25,29 +31,25 @@ return {
       },
       follow_current_file = {
         enabled = true,
-        leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+        leave_dirs_open = true,
       },
     },
-    -- Add event handler for setting relative line numbers
     event_handlers = {
       {
         event = 'neo_tree_buffer_enter',
         handler = function(arg)
-          vim.cmd [[
-                setlocal relativenumber
-              ]]
+          vim.cmd [[ setlocal relativenumber ]]
         end,
       },
     },
   },
   config = function(_, opts)
+    opts.window.position = 'right' -- Set right-side position explicitly here too
     require('neo-tree').setup(opts)
-    -- Automatically open Neo-tree on startup if no file is specified
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
-        local argc = vim.fn.argc()
-        if argc == 0 then
-          require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd() }
+        if vim.fn.argc() == 0 then
+          require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd(), position = 'right' }
         end
       end,
     })
