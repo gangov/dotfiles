@@ -15,7 +15,7 @@
         //"mpd",
         "pulseaudio",
         "network",
-        //"power-profiles-daemon",
+        "power-profiles-daemon",
         "cpu",
         "temperature",
         "memory",
