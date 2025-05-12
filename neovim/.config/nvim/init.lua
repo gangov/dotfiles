@@ -160,6 +160,84 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- LSP for React Native
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    config = function()
+      require('mason').setup()
+      require('mason-lspconfig').setup {
+        ensure_installed = { 'tsserver' },
+        automatic_installation = true,
+      }
+
+      local lspconfig = require 'lspconfig'
+      lspconfig.tsserver.setup {
+        capabilities = require('cmp_nvim_lsp').default_capabilities(),
+      }
+    end,
+  },
+
+  -- Autocompletion
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'mlaursen/vim-react-snippets',
+    },
+    config = function()
+      local cmp = require 'cmp'
+      local luasnip = require 'luasnip'
+      require('vim-react-snippets').lazy_load()
+
+      cmp.setup {
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'buffer' },
+          { name = 'path' },
+        },
+      }
+    end,
+  },
+
+  -- Syntax Highlighting
+  {
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    opts = {
+      ensure_installed = { 'javascript', 'typescript', 'tsx', 'json', 'css', 'html', 'lua' },
+      highlight = { enable = true },
+    },
+  },
+
+  -- Debugging
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      'mxsdev/nvim-dap-vscode-js',
+      'rcarriga/nvim-dap-ui',
+    },
+    config = function()
+      require('dap-vscode-js').setup {
+        adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge' },
+      }
+      require('dapui').setup()
+    end,
+  },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -674,7 +752,7 @@ require('lazy').setup({
         end)(),
       },
       'saadparwaiz1/cmp_luasnip',
-
+      'mlaursen/vim-react-snippets',
       -- Adds other completion capabilities.
       -- nvim-cmp does not ship with all sources by default. They are split
       -- into multiple repos for maintenance purposes.
@@ -683,6 +761,7 @@ require('lazy').setup({
       'neovim/nvim-lspconfig', -- LSP configuration
     },
     config = function()
+      require('vim-react-snippets').lazy_load()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
@@ -894,12 +973,14 @@ require('lazy').setup({
   require 'kickstart.plugins.lualine',
   require 'custom.themes.catppuccin',
   require 'kickstart.plugins.markdown',
+  require 'kickstart.plugins.nvim_nio',
+  require 'kickstart.plugins.codecompanion',
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  { import = 'custom.plugins' },
+  -- { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
